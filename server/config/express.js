@@ -41,7 +41,4 @@ app.use(methodOverride())
 // 设置多种 HTTP 头来帮助保护你的应用免受一些广为人知的 Web 漏洞的侵害。例如，它可以添加如 X-Frame-Options 和 X-XSS-Protection 之类的头来增强安全性。
 app.use(helmet())
 
-// 启用 CORS（跨源资源共享），允许不同域名的客户端访问你的应用。这对于前后端分离的应用或任何需要从其他域名的客户端请求数据的应用来说都是必须的。
-app.use(cors())
-
 module.exports = app
