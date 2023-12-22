@@ -6,7 +6,6 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const compress = require('compression')
 const methodOverride = require('method-override')
-const cors = require('cors')
 const helmet = require('helmet')
 
 const config = require('./config')
