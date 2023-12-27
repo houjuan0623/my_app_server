@@ -13,8 +13,7 @@ const verify = (req, res, next) => {
   }
   return next()
 }
-// eslint-disable-next-line
-
+// eslint-disable-next-
 const error = (error, _req, res, _next) => {
   logger.error(error)
 
