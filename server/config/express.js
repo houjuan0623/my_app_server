@@ -47,5 +47,7 @@ app.use(helmet({ contentSecurityPolicy: false }))
 app.use(passport.initialize())
 
 app.use('/api', router)
+// 在路由解析中出现的错误都汇集到这里
+app.use(helper.error)
 
 module.exports = app
