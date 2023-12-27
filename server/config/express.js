@@ -7,10 +7,13 @@ const cookieParser = require('cookie-parser')
 const compress = require('compression')
 const methodOverride = require('method-override')
 const helmet = require('helmet')
+const passport = require('passport')
 
 const config = require('./config')
 const swaggerDefinition = require('./swagger')
 const router = require('../routes/index')
+require('./passport')
+const helper = require('../handlers/helpers')
 
 var app = express()
 
@@ -41,5 +44,8 @@ app.use(methodOverride())
 // 设置多种 HTTP 头来帮助保护你的应用免受一些广为人知的 Web 漏洞的侵害。例如，它可以添加如 X-Frame-Options 和 X-XSS-Protection 之类的头来增强安全性。
 app.use(helmet({ contentSecurityPolicy: false }))
 
-app.use('/api/v1', router)
+app.use(passport.initialize())
+
+app.use('/api', router)
+
 module.exports = app

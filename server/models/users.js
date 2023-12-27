@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    email: { type: String, unique: true },
     profile: String,
     avatar: String,
     createdAt: { type: Date, default: Date.now },
@@ -15,12 +14,26 @@ const userSchema = new mongoose.Schema(
   { collection: 'users' },
 )
 
-async function setupUsers() {
-  const Users = await mongooseManager.checkAndCreateCollection(
-    'users',
-    userSchema,
-  )
-  return Users
+class UserModel {
+  constructor() {
+    this.model = mongoose.model('User', userSchema)
+    this.initialized = false
+  }
+  async init() {
+    if (!this.initialized) {
+      await mongooseManager.checkAndCreateCollection('users', userSchema)
+      this.initialized = true
+    }
+    return this.model
+  }
+  async findUserByName(username) {
+    return this.model.findOne({ username })
+  }
+  async insert(userData) {
+    const user = new this.model(userData)
+    return user.save()
+  }
 }
 
-module.exports = setupUsers()
+const userModel = new UserModel()
+module.exports = userModel

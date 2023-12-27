@@ -1,11 +1,11 @@
-const setupUsers = require('../models/users')
+const { userModel } = require('../models/index')
 
 class UserService {
   async createUser(userData) {
     // 这里可以添加数据验证、业务逻辑等
-    console.log(userData, 2222222)
-    const Users = await setupUsers
+    const Users = await userModel.init()
     const newUser = new Users(userData)
+    console.log(newUser, 22222)
     return await newUser.save()
   }
 

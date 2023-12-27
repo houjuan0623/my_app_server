@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "/home/ubuntu/my_app_server/logs/.e6533f69deff26325ebd0c299706a2f6ddcf4398-audit.json",
+    "files": [
+        {
+            "date": 1703638841282,
+            "name": "/home/ubuntu/my_app_server/logs/2023-12-27_error.log",
+            "hash": "09bbfe9582fcf2b93c55e4ea5fd801e6f444247af37528ce494d2de755076f69"
+        }
+    ],
+    "hashType": "sha256"
+}

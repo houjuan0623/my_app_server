@@ -1,8 +1,8 @@
-POST http://111.230.32.100:4000/api/v1/user/create HTTP/1.1
+POST http://111.230.32.100:4000/api/v1/createUser HTTP/1.1
 content-type: application/json
 
 {
-    "username": "larry",
+    "username": "小明",
     "password": "123",
     "age": 18
 }
