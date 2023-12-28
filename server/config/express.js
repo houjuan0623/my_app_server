@@ -14,11 +14,13 @@ const swaggerDefinition = require('./swagger')
 const router = require('../routes/index')
 require('./passport')
 const helper = require('../handlers/helpers')
+const { stream } = require('./winston')
 
 var app = express()
 
 if (config.NODE_ENV === 'development') {
   app.use(logger('dev'))
+  app.use(logger('combined', { stream }))
 }
 
 if (config.NODE_ENV !== 'production') {

@@ -29,7 +29,7 @@ class UserModel {
   async findUserByName(username) {
     return this.model.findOne({ username })
   }
-  async insert(userData) {
+  async insertUser(userData) {
     const user = new this.model(userData)
     return user.save()
   }

@@ -1,15 +1,17 @@
 const userService = require('../services/UserService')
+const { SuccessResponse } = require('../utils/index')
 
 class UserController {
   async createUser(req, res) {
-    try {
-      console.log(req.body)
-      const user = await userService.createUser(req.body)
-      res.status(200).json(user)
-    } catch (error) {
-      console.log(error, 123122313)
-      res.status(500).json({ error: error.message })
-    }
+    // const user = await userService.createUser(req.body)
+    // new SuccessResponse(res, '用户创建成功', {
+    //   test: '随便返回一段字符串用以测试',
+    //   user: 'user',
+    // }).send()
+    return res.status(200).send({
+      test: '随便返回一段字符串用以测试',
+      user: 'user',
+    })
   }
 
   // 其他方法...

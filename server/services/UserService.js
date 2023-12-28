@@ -5,7 +5,6 @@ class UserService {
     // 这里可以添加数据验证、业务逻辑等
     const Users = await userModel.init()
     const newUser = new Users(userData)
-    console.log(newUser, 22222)
     return await newUser.save()
   }
 

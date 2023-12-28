@@ -1,5 +1,6 @@
-POST http://111.230.32.100:4000/api/v1/createUser HTTP/1.1
+POST http://localhost:4000/api/v1/createUser HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZWNvbnAiLCJzdWIiOiIxNTI4ODg4ODg4OCIsImlhdCI6MTcwMzczNjM5OSwiZXhwIjoxNzA0MzQxMTk5fQ.3J9n-9-tw6MRdh_5xMSLmOffktnDVxx7T10PF5vafAQ
 
 {
     "username": "小明",

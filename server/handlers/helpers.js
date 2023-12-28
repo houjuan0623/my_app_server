@@ -13,9 +13,9 @@ const verify = (req, res, next) => {
   }
   return next()
 }
-// eslint-disable-next-
+// eslint-disable-next-line
 const error = (error, _req, res, _next) => {
-  logger.error(error)
+  logger.error(error.message)
 
   if (config.NODE_ENV) {
     signale.fatal(error)

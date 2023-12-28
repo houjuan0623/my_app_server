@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 const path = require('path')
 
 if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '../../.production.env' })
+  dotenv.config({ path: path.resolve(__dirname, '../../.production.env') })
 } else {
   dotenv.config({ path: path.resolve(__dirname, '../../.development.env') })
 }
