@@ -1,5 +1,5 @@
 const { body, oneOf } = require('express-validator')
-const userModel = require('../models/users')
+const getUserModel = require('../models/users')
 
 const validators = {}
 validators.login = [
@@ -46,6 +46,7 @@ validators.signup = [
     .matches(/^1\d{10}$/)
     .withMessage('用户名必须为有效的手机号')
     .custom(async (value, { req }) => {
+      const userModel = await getUserModel()
       const user = await userModel.findUserByName(value)
 
       if (user) {

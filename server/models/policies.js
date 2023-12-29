@@ -1,5 +1,6 @@
-const mongooseManager = require('../config/mongoose')
 const mongoose = require('mongoose')
+
+const BaseModel = require('./Base')
 
 const policySchema = new mongoose.Schema(
   {
@@ -11,9 +12,15 @@ const policySchema = new mongoose.Schema(
   { collection: 'policies' },
 )
 
-const Policies = mongooseManager.checkAndCreateCollection(
-  'policies',
-  policySchema,
-)
+class PolicyModel extends BaseModel {
+  constructor(name, schema) {
+    super(name, schema)
+  }
+}
 
-module.exports = Policies
+const policyModel = new PolicyModel('policies', policySchema)
+
+module.exports = async () => {
+  await policyModel.init()
+  return policyModel
+}

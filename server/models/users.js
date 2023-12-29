@@ -1,5 +1,6 @@
-const mongooseManager = require('../config/mongoose')
 const mongoose = require('mongoose')
+
+const BaseModel = require('./Base')
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,20 +15,12 @@ const userSchema = new mongoose.Schema(
   { collection: 'users' },
 )
 
-class UserModel {
-  constructor() {
-    this.model = mongoose.model('User', userSchema)
-    this.initialized = false
-  }
-  async init() {
-    if (!this.initialized) {
-      await mongooseManager.checkAndCreateCollection('users', userSchema)
-      this.initialized = true
-    }
-    return this.model
+class UserModel extends BaseModel {
+  constructor(name, schema) {
+    super(name, schema)
   }
   async findUserByName(username) {
-    return this.model.findOne({ username })
+    return await this.model.findOne({ username })
   }
   async insertUser(userData) {
     const user = new this.model(userData)
@@ -35,5 +28,9 @@ class UserModel {
   }
 }
 
-const userModel = new UserModel()
-module.exports = userModel
+// 立即执行的异步函数来初始化 userModel
+const userModel = new UserModel('users', userSchema)
+module.exports = async () => {
+  await userModel.init()
+  return userModel
+}

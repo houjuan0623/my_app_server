@@ -1,5 +1,6 @@
-const mongooseManager = require('../config/mongoose')
 const mongoose = require('mongoose')
+
+const BaseModel = require('./Base')
 
 const roleSchema = new mongoose.Schema(
   {
@@ -8,6 +9,16 @@ const roleSchema = new mongoose.Schema(
   },
   { collection: 'roles' },
 )
-const Roles = mongooseManager.checkAndCreateCollection('Roles', roleSchema)
 
-module.exports = Roles
+class RoleModel extends BaseModel {
+  constructor(name, schema) {
+    super(name, schema)
+  }
+}
+
+const roleModel = new RoleModel('roles', roleSchema)
+
+module.exports = async () => {
+  await roleModel.init()
+  return roleModel
+}

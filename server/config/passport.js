@@ -4,7 +4,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const LocalStrategy = require('passport-local')
 const bcrypt = require('bcryptjs')
 const config = require('./config') // 假设您的配置文件中包含了 JWT 密钥
-const userModel = require('../models/users') // 用户模型
+const getUserModel = require('../models/users') // 用户模型
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // 定义如何从请求中提取 JWT。从请求头中的 Authorization 字段提取以 Bearer 开头的 token。
@@ -14,6 +14,7 @@ const options = {
 passport.use(
   new JwtStrategy(options, async (jwt_payload, done) => {
     try {
+      const userModel = await getUserModel()
       const user = await userModel.findUserByName(jwt_payload.sub)
       if (user) {
         return done(null, user)
@@ -33,6 +34,7 @@ const localOptions = {
 passport.use(
   new LocalStrategy(localOptions, async (username, password, done) => {
     try {
+      const userModel = await getUserModel()
       const user = await userModel.findUserByName(username)
       if (!user) {
         return done(null, false)

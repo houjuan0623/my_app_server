@@ -1,5 +1,6 @@
-const mongooseManager = require('../config/mongoose')
 const mongoose = require('mongoose')
+
+const BaseModel = require('./Base')
 
 const resourceSchema = new mongoose.Schema(
   {
@@ -9,9 +10,16 @@ const resourceSchema = new mongoose.Schema(
   },
   { collection: 'resources' },
 )
-const Resources = mongooseManager.checkAndCreateCollection(
-  'resources',
-  resourceSchema,
-)
 
-module.exports = Resources
+class ResourceModel extends BaseModel {
+  constructor(name, schema) {
+    super(name, schema)
+  }
+}
+
+const resourceModel = new ResourceModel('resources', resourceSchema)
+
+module.exports = async () => {
+  await resourceModel.init()
+  return resourceModel
+}
