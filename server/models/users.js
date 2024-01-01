@@ -19,6 +19,17 @@ class UserModel extends BaseModel {
   constructor(name, schema) {
     super(name, schema)
   }
+
+  // 确保无论 UserModel 被引用多少次，都只会初始化一次，并且每次引用都返回同一个实例。
+  static async getInstance() {
+    if (!this.instance) {
+      const userModel = new UserModel('users', userSchema)
+      await userModel.init()
+      this.instance = userModel
+    }
+    return this.instance
+  }
+
   async findUserByName(username) {
     return await this.model.findOne({ username })
   }
@@ -28,9 +39,4 @@ class UserModel extends BaseModel {
   }
 }
 
-// 立即执行的异步函数来初始化 userModel
-const userModel = new UserModel('users', userSchema)
-module.exports = async () => {
-  await userModel.init()
-  return userModel
-}
+module.exports = UserModel
