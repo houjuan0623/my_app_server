@@ -1,10 +1,10 @@
-const userService = require('../services/UserService')
-const { SuccessResponse } = require('../utils/index')
+// const userService = require('../services/UserService')
+// const { Success } = require('../utils/index')
 
 class UserController {
   async createUser(req, res) {
     // const user = await userService.createUser(req.body)
-    // new SuccessResponse(res, '用户创建成功', {
+    // new Success(res, '用户创建成功', {
     //   test: '随便返回一段字符串用以测试',
     //   user: 'user',
     // }).send()

@@ -12,7 +12,7 @@ class CustomError extends Error {
   }
 }
 
-class SuccessResponse {
+class Success {
   constructor(res, message, data) {
     this.res = res
     this.message = message
@@ -24,6 +24,22 @@ class SuccessResponse {
     this.res.status(this.statusCode).json({
       message: this.message,
       data: this.data,
+      success: true,
+    })
+  }
+}
+
+class Failure {
+  constructor(res, message) {
+    this.res = res
+    this.message = message
+    this.statusCode = 500
+  }
+
+  send() {
+    this.res.status(this.statusCode).json({
+      message: this.message,
+      success: false,
     })
   }
 }
@@ -40,6 +56,7 @@ const signToken = (user) =>
     config.JWT_SECRET,
   )
 
-module.exports.SuccessResponse = SuccessResponse
+module.exports.Success = Success
 module.exports.CustomError = CustomError
 module.exports.signToken = signToken
+module.exports.Failure = Failure

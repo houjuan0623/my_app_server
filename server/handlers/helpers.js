@@ -2,7 +2,7 @@ const { validationResult } = require('express-validator')
 const { logger } = require('../config/winston')
 const signale = require('signale')
 
-const { CustomError } = require('../utils/index')
+const { CustomError, Failure } = require('../utils/index')
 const config = require('../config/config')
 
 const verify = (req, res, next) => {
@@ -22,10 +22,12 @@ const error = (error, _req, res, _next) => {
   }
 
   if (error instanceof CustomError) {
-    return res.status(error.statusCode || 500).json({ error: error.message })
+    return res
+      .status(error.statusCode || 500)
+      .json({ message: error.message, success: false })
   }
 
-  return res.status(500).json({ error: 'An error occurred.' })
+  return new Failure(res, error.message)
 }
 
 module.exports.error = error
