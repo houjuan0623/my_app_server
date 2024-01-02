@@ -1,8 +1,8 @@
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 
-const { CustomError, SuccessResponse, signToken } = require('../utils/index')
-const userModel = require('../models/users')
+const { CustomError, Success, signToken } = require('../utils/index')
+const UserModel = require('../models/users')
 
 const authenticate = (type, error) =>
   async function auth(req, res, next) {
@@ -32,16 +32,19 @@ const signup = async (req, res) => {
   // TODO: 最好在这里添加一个字段实现注册审核制
   const salt = await bcrypt.genSalt(12)
   const password = await bcrypt.hash(req.body.password, salt)
-  userModel.insertUser({ username: req.body.username, password })
-  new SuccessResponse(res, '用户创建成功', {
-    test: '随便返回一段字符串用以测试',
-    user: 'test',
+  const userModel = await UserModel.getInstance()
+  const userId = await userModel.insertUser({
+    username: req.body.username,
+    password,
+  })
+  new Success(res, '用户创建成功', {
+    id: userId,
   }).send()
 }
 
 const token = async (req, res) => {
   const token = signToken(req.user)
-  const success = new SuccessResponse(res, '登录成功', { token })
+  const success = new Success(res, '登录成功', { token })
   success.send()
 }
 

@@ -18,6 +18,14 @@ class BaseModel {
     }
     return this.model
   }
+
+  static async getInstance() {
+    if (!this.instance) {
+      this.instance = new this()
+      await this.instance.init()
+    }
+    return this.instance
+  }
 }
 
 module.exports = BaseModel

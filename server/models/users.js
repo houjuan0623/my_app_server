@@ -16,21 +16,21 @@ const userSchema = new mongoose.Schema(
 )
 
 class UserModel extends BaseModel {
-  constructor(name, schema) {
-    super(name, schema)
+  static name = 'users'
+  static schema = userSchema
+
+  constructor() {
+    super(UserModel.name, UserModel.schema)
   }
+
   async findUserByName(username) {
     return await this.model.findOne({ username })
   }
   async insertUser(userData) {
     const user = new this.model(userData)
-    return user.save()
+    await user.save()
+    return user._id.toString()
   }
 }
 
-// 立即执行的异步函数来初始化 userModel
-const userModel = new UserModel('users', userSchema)
-module.exports = async () => {
-  await userModel.init()
-  return userModel
-}
+module.exports = UserModel
