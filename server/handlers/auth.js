@@ -1,8 +1,9 @@
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 
-const { CustomError, Success, signToken } = require('../utils/index')
-const UserModel = require('../models/users')
+const { CustomError, Success, Failure, signToken } = require('../utils/index')
+const { UserModel } = require('../models/index')
+const { enforcer } = require('../config/casbin')
 
 const authenticate = (type, error) =>
   async function auth(req, res, next) {
@@ -16,6 +17,7 @@ const authenticate = (type, error) =>
       }
 
       if (user) {
+        // 将user的全部信息挂在到req上，留作稍后使用
         req.user = {
           ...user.toObject(), // Mongoose document should be converted to a plain object
         }
@@ -48,9 +50,30 @@ const token = async (req, res) => {
   success.send()
 }
 
+const hasPermission = async (req, res, next) => {
+  const userModel = await UserModel.getInstance()
+  const roles = await userModel.getUsersRolesByUsername(req.body.username)
+  if (roles?.length === 0) {
+    new Failure(res, '用户没有分配角色', 403).send()
+  }
+  for (const role of roles) {
+    const allow = await enforcer.enforce(
+      role,
+      req.permissionParams.res,
+      req.permissionParams.act,
+    )
+    // 如果有权限，进入下面的操作
+    if (allow) {
+      return next()
+    }
+  }
+  return new Failure(res, '用户没有分配该权限', 403).send()
+}
+
 module.exports = {
   local,
   jwt,
   signup,
   token,
+  hasPermission,
 }

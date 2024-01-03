@@ -4,7 +4,7 @@ const { addDays } = require('date-fns')
 const config = require('../config/config')
 
 class CustomError extends Error {
-  constructor(message, statusCode = 500, data) {
+  constructor(message, statusCode = 500, data = {}) {
     super(message)
     this.name = this.constructor.name
     this.statusCode = statusCode
@@ -30,10 +30,10 @@ class Success {
 }
 
 class Failure {
-  constructor(res, message) {
+  constructor(res, message, statusCode = 200) {
     this.res = res
     this.message = message
-    this.statusCode = 500
+    this.statusCode = statusCode
   }
 
   send() {

@@ -1,5 +1,5 @@
 const { body, oneOf } = require('express-validator')
-const UserModel = require('../models/users')
+const { UserModel } = require('../models/index')
 
 const validators = {}
 validators.login = [

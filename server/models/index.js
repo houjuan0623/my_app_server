@@ -1,13 +1,11 @@
-const userModel = require('./users')
-const roleModel = require('./roles')
-const resourceModel = require('./resources')
-const policyModel = require('./policies')
+const UserModel = require('./users')
+const RoleModel = require('./roles')
+const ResourceModel = require('./resources')
 
 const models = {
-  userModel,
-  roleModel,
-  resourceModel,
-  policyModel,
+  UserModel,
+  RoleModel,
+  ResourceModel,
 }
 
 module.exports = models

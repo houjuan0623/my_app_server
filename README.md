@@ -1,6 +1,6 @@
 # 小程序的后端
 
-- mongodb version 6.0.12 (安装教程)[https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-enterprise-on-ubuntu-tarball/]
+- mongodb version: 必须安装
 - nodejs version 20.10.0
 - mongoose version 7.6.7
 - (github快速访问配置方法)[https://zhuanlan.zhihu.com/p/314071453]
@@ -22,3 +22,5 @@
 
 **结论：**
 对于一个问卷发放和博客结合的系统，考虑到这种系统可能包含较复杂的业务逻辑、用户交互和数据处理，采用 MVC 模式可能更合适。可以帮助用户更好地组织代码，还可以在项目扩展和迭代时提供更好的可维护性。当然，对于一些特定的路由，如果它们的逻辑相对简单，仍然可以采用中间件链的方式来处理。
+
+
