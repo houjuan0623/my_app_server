@@ -8,6 +8,7 @@ const compress = require('compression')
 const methodOverride = require('method-override')
 const helmet = require('helmet')
 const passport = require('passport')
+const cors = require('cors')
 
 const config = require('./config')
 const swaggerDefinition = require('./swagger')
@@ -15,6 +16,7 @@ const router = require('../routes/index')
 require('./passport')
 const helper = require('../handlers/helpers')
 const { stream } = require('./winston')
+const { CustomError } = require('../utils/index')
 
 var app = express()
 
@@ -32,6 +34,8 @@ if (config.NODE_ENV !== 'production') {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 }
 
+// 使用默认配置的 CORS（允许任何来源）
+app.use(cors())
 // 解析来自客户端的 JSON 请求体（request bodies），并把解析后的数据放到 req.body 中。这对于处理 JSON 类型的输入（常见于 REST API）非常有用。
 app.use(bodyParser.json())
 // 解析来自客户端的 URL 编码请求体（通常是表单数据），extended: true 表示使用库 qs 来解析数据，这个库允许更丰富的对象编码。
@@ -49,6 +53,12 @@ app.use(helmet({ contentSecurityPolicy: false }))
 app.use(passport.initialize())
 
 app.use('/api', router)
+// 所有路由之后，这是个路由中间件，如果上面的路由没有处理，将进入这个路由，如果上面有对应的路由就不进入这个路由
+app.use((req, res, next) => {
+  const err = new CustomError('路由未找到', 404)
+  next(err) // 将错误传递给下一个错误处理中间件
+})
+
 // 在路由解析中出现的错误都汇集到这里处理
 app.use(helper.error)
 
