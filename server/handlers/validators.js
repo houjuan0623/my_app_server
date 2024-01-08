@@ -1,5 +1,5 @@
 const { body, oneOf } = require('express-validator')
-const { UserModel } = require('../models/index')
+const { UserModel, SchoolModel } = require('../models/index')
 
 const validators = {}
 validators.login = [
@@ -53,5 +53,18 @@ validators.signup = [
       }
     })
     .withMessage('当前手机号已被注册。'),
+]
+validators.createSchool = [
+  // 验证 name 字段
+  body('name', '学校名称是必须的。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .custom(async (value) => {
+      const schoolModel = await SchoolModel.getInstance()
+      const school = await schoolModel.findSchoolByName(value)
+      if (school) {
+        return Promise.reject('已存在同名学校。')
+      }
+    }),
 ]
 module.exports = validators
