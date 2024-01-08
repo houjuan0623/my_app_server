@@ -31,6 +31,11 @@ class UserModel extends BaseModel {
     return await this.model.findById(id)
   }
 
+  // 查找所有用户
+  async findAllUsers() {
+    return await this.model.find({})
+  }
+
   async insertUser(userData) {
     const user = new this.model(userData)
     await user.save()

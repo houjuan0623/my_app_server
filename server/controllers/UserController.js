@@ -7,6 +7,11 @@ class UserController {
     new Success(res, '用户创建成功', user).send()
   }
 
+  async findAllUsers(req, res) {
+    const users = await userService.findAllUsers()
+    new Success(res, '查询所有用户成功', users).send()
+  }
+
   // async getUsers(req, res) {}
 }
 

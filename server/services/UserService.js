@@ -7,6 +7,10 @@ class UserService {
     await userModel.insert(userData)
   }
 
+  async findAllUsers() {
+    const userModel = await UserModel.getInstance()
+    return await userModel.findAllUsers()
+  }
   // 这里可以添加更多用户相关的服务方法，如 getUser, updateUser 等
 }
 
