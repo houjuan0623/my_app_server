@@ -6,7 +6,7 @@ const { CustomError, Failure } = require('../utils/index')
 const config = require('../config/config')
 
 const verify = (req, res, next) => {
-  console.log('req.body is: ', req.body)
+  // 检查传入请求（req）是否通过了之前定义的验证规则。如果请求没有通过验证，它会创建并抛出一个自定义错误（CustomError）。
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     const message = errors.array()[0].msg
@@ -23,12 +23,14 @@ const error = (error, _req, res, _next) => {
   }
 
   if (error instanceof CustomError) {
-    return res
-      .status(error.statusCode || 500)
-      .json({ message: error.message, success: false })
+    return res.status(error.statusCode || 500).json({
+      statusCode: error.statusCode,
+      message: error.message,
+      success: false,
+    })
   }
 
-  return new Failure(res, error.message)
+  return new Failure(res, error.message).send()
 }
 
 const setPermissionParams = (resource, action) => {
