@@ -1,5 +1,5 @@
 const { body, oneOf } = require('express-validator')
-const { UserModel, SchoolModel } = require('../models/index')
+const { UserModel, SchoolModel, RoleModel } = require('../models/index')
 
 const validators = {}
 validators.login = [
@@ -64,6 +64,20 @@ validators.createSchool = [
       const school = await schoolModel.findSchoolByName(value)
       if (school) {
         return Promise.reject('已存在同名学校。')
+      }
+    }),
+]
+
+validators.createRole = [
+  // 验证 name 字段
+  body('name', '角色名称是必须的。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .custom(async (value) => {
+      const roleModel = await RoleModel.getInstance()
+      const role = await roleModel.findRoleByName(value)
+      if (role) {
+        return Promise.reject('已存在同名角色。')
       }
     }),
 ]
