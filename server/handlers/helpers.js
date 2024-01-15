@@ -24,8 +24,8 @@ const error = (error, _req, res, _next) => {
 
   if (error instanceof CustomError) {
     return res.status(error.statusCode || 500).json({
-      statusCode: error.statusCode,
-      message: error.message,
+      statusCode: error.statusCode || 500,
+      message: error?.message || '',
       success: false,
     })
   }
