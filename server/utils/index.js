@@ -22,6 +22,7 @@ class Success {
 
   send() {
     this.res.status(this.statusCode).json({
+      statusCode: this.statusCode,
       message: this.message,
       data: this.data,
       success: true,
@@ -30,7 +31,7 @@ class Success {
 }
 
 class Failure {
-  constructor(res, message, statusCode = 200) {
+  constructor(res, message, statusCode = 500) {
     this.res = res
     this.message = message
     this.statusCode = statusCode
@@ -38,6 +39,7 @@ class Failure {
 
   send() {
     this.res.status(this.statusCode).json({
+      statusCode: this.statusCode,
       message: this.message,
       success: false,
     })
