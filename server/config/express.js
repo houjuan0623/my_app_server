@@ -17,6 +17,14 @@ require('./passport')
 const helper = require('../handlers/helpers')
 const { stream } = require('./winston')
 const { CustomError } = require('../utils/index')
+const rateLimit = require('express-rate-limit')
+
+// 创建速率限制器
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 时间窗口，例如15分钟
+  max: 100, // 在这个时间窗口内每个IP最多请求100次
+  message: '在规定时间（15分钟）内，请求超过100次，请过15分钟后再次尝试。',
+})
 
 var app = express()
 
@@ -51,7 +59,7 @@ app.use(methodOverride())
 app.use(helmet({ contentSecurityPolicy: false }))
 
 app.use(passport.initialize())
-
+app.use(apiLimiter)
 app.use('/api', router)
 // 所有路由之后，这是个路由中间件，如果上面的路由没有处理，将进入这个路由，如果上面有对应的路由就不进入这个路由
 app.use((req, res, next) => {
