@@ -1,0 +1,6 @@
+POST http://localhost:4000/api/v1/createSchool HTTP/1.1
+content-type: application/json
+
+{
+    "name": "郑州市123中学"
+}
