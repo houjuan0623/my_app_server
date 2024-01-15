@@ -1,5 +1,6 @@
 const { body, oneOf } = require('express-validator')
 const { UserModel, SchoolModel, RoleModel } = require('../models/index')
+const { getEnforcer } = require('../config/casbin')
 
 const validators = {}
 validators.login = [
@@ -81,4 +82,31 @@ validators.createRole = [
       }
     }),
 ]
+
+validators.createPermission = [
+  // 验证 name 字段
+  body('sub', '实体名称无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('实体名称是必须的。'),
+  body('obj', '资源名称无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('资源名称是必须的。'),
+  body('act', '操作类型无效。')
+    .isArray({ min: 1 }) // 确保 act 是一个长度至少为1的数组
+    .withMessage('操作类型不能为空。'),
+  body().custom(async (value) => {
+    const { sub, obj, act } = value
+    // 对于每个 act，检查策略是否存在
+    for (const a of act) {
+      const enforcer = getEnforcer()
+      const exists = await enforcer.hasPolicy(sub, obj, a)
+      if (exists) {
+        return Promise.reject(`策略 [${sub}, ${obj}, ${a}] 已存在。`)
+      }
+    }
+  }),
+]
+
 module.exports = validators
