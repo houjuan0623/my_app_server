@@ -22,5 +22,10 @@ async function reloadPolicy() {
     await initEnforcer()
   }
 }
-module.exports.enforcer = enforcer
+
+function getEnforcer() {
+  return enforcer
+}
+
+module.exports.getEnforcer = getEnforcer
 module.exports.reloadPolicy = reloadPolicy
