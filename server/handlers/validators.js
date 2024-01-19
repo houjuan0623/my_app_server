@@ -1,5 +1,10 @@
 const { body, oneOf } = require('express-validator')
-const { UserModel, SchoolModel, RoleModel } = require('../models/index')
+const {
+  UserModel,
+  SchoolModel,
+  RoleModel,
+  ResourceModel,
+} = require('../models/index')
 const { getEnforcer } = require('../config/casbin')
 
 const validators = {}
@@ -107,6 +112,62 @@ validators.createPermission = [
       }
     }
   }),
+]
+
+validators.createResource = [
+  // 验证 name 字段
+  body('name', '权限名称无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源名称是必须的。'),
+  body('type', '权限类型无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源类型是必须的。'),
+  body('action', '权限资源操作类型无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源操作类型是必须的。'),
+  body('parent_id', '父节点无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('父节点无效。'),
+  body().custom(async (value) => {
+    const { name, type, action, parent_id } = value
+    // 检查是否已经存在同名资源
+    const resourceModel = await ResourceModel.getInstance()
+    const resource = await resourceModel.findResourceByNameTypeAction(
+      name,
+      type,
+      action,
+      parent_id,
+    )
+    if (resource) {
+      return Promise.reject(
+        `策略 [${parent_id}, ${name}, ${type}, ${action}] 已存在。`,
+      )
+    }
+  }),
+]
+
+validators.updateResource = [
+  // 验证 name 字段
+  body('name', '权限名称无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源名称是必须的。'),
+  body('type', '权限类型无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源类型是必须的。'),
+  body('action', '权限资源操作类型无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('权限资源操作类型是必须的。'),
+  body('_id', '传入的节点_id无效。')
+    .exists({ checkFalsy: true, checkNull: true }) // 检查 name 字段是否存在
+    .trim() // 去除两侧的空格
+    .withMessage('传入的节点_id无效。'),
 ]
 
 module.exports = validators

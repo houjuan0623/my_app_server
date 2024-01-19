@@ -31,6 +31,21 @@ class Casbin_Rule {
     return addedCount
   }
 
+  // 为角色添加权限
+  async addRoleForPermission(role, permissions) {
+    let addedCount = 0
+
+    for (const perm of permissions) {
+      // 假设 perm 是一个包含对象和行为的对象，例如 { obj: 'resource1', act: 'read' }
+      const added = await casbinRule.addPolicy(role, perm.obj, perm.act)
+      if (added) {
+        addedCount += added
+      }
+    }
+
+    return addedCount
+  }
+
   // 移除策略
   async removePolicy(sub, obj, act) {
     const enforcer = getEnforcer()

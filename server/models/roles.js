@@ -19,7 +19,7 @@ class RoleModel extends BaseModel {
 
   async createRole(data) {
     const role = new this.model(data)
-    return role.save()
+    return await role.save()
   }
 
   async findRoleByName(name) {
